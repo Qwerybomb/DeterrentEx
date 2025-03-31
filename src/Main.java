@@ -30,17 +30,16 @@ public class Main {
             while ((bytesRead = microphone.read(buffer, 0, buffer.length)) > 0) {
                 Test.add(buffer[buffer.length - 1]);
                 bufferCount++;
-                if (bufferCount == 10) {
+                if (bufferCount == 2) {
                     bufferCount = 0;
                     for (int i : Test ) {
                      fullSum = fullSum + Math.abs(i);
                     }
                     fullSum = fullSum / Test.size();
-                   if (fullSum > 100) {
+                   if (fullSum > 180) {
                        File annoyingAudio = new File("C:\\Users\\isaac\\Downloads\\Symbal.wav");
                        playSound(annoyingAudio);
                        System.out.println(fullSum);
-
                    }
                     Test.clear();
                 }
@@ -51,6 +50,6 @@ public class Main {
     }
     public static void main(String[] args) {
         prepareMicrophone();
-
+       System.out.println("program Terminated");
     }
 }
