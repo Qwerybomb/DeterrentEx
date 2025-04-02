@@ -1,6 +1,7 @@
 import javax.sound.sampled.*;
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class Main {
     public static void playSound(File Audio) {
@@ -28,25 +29,18 @@ public class Main {
             int bytesRead;
             int fullSum = 0;
             while ((bytesRead = microphone.read(buffer, 0, buffer.length)) > 0) {
-                Test.add(buffer[buffer.length - 1]);
-                bufferCount++;
-                if (bufferCount == 2) {
-                    bufferCount = 0;
-                    for (int i : Test ) {
-                     fullSum = fullSum + Math.abs(i);
-                    }
-                    fullSum = fullSum / Test.size();
-                   if (fullSum > 180) {
-                       File annoyingAudio = new File("C:\\Users\\isaac\\Downloads\\Symbal.wav");
-                       playSound(annoyingAudio);
-                       System.out.println(fullSum);
-                   }
-                    Test.clear();
-                }
+                System.out.println(Arrays.toString(buffer));
             }
         } catch (LineUnavailableException e) {
             throw new RuntimeException(e);
         }
+    }
+    public static String convertTo(Byte Input) {
+       String output = "";
+        for (int i = 0; i < Input ;i++) {
+            output = output + ".";
+        }
+        return output;
     }
     public static void main(String[] args) {
         prepareMicrophone();
