@@ -1,19 +1,5 @@
 import javax.sound.sampled.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.io.File;
-import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.concurrent.atomic.AtomicInteger;
-import java.util.stream.Collectors;
-import static java.lang.Math.log10;
-import javax.swing.*;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
 
 public class Main {
     public static void playSound(File Audio) {
@@ -60,7 +46,7 @@ public static void prepareMicrophone(File audio) throws LineUnavailableException
 
 }
     public static void main(String[] args) throws LineUnavailableException {
-        File sound = new File("C:\\Users\\isaac\\Downloads\\heavy-oh_nooooo");
+        File sound = new File("C:\\Users\\isaac\\Music\\sharuk.wav");
         prepareMicrophone(sound);
     }
 }
