@@ -1,9 +1,19 @@
 import javax.sound.sampled.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.File;
+import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
-
+import java.util.stream.Collectors;
 import static java.lang.Math.log10;
+import javax.swing.*;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
 
 public class Main {
     public static void playSound(File Audio) {
@@ -20,53 +30,38 @@ public class Main {
             ex.printStackTrace();
         }
     }
-    public static int calculateRMSLevel(byte[] audioData)
-    {
-        long lSum = 0;
-        for(int i=0; i < audioData.length; i++)
-            lSum = lSum + audioData[i];
-
-        double dAvg = (double) lSum / audioData.length;
-        double sumMeanSquare = 0d;
-
-        for(int j=0; j < audioData.length; j++)
-            sumMeanSquare += Math.pow(audioData[j] - dAvg, 2d);
-
-        double averageMeanSquare = sumMeanSquare / audioData.length;
-
-        return (int)(Math.pow(averageMeanSquare,0.5d) + 0.5);
-    }
-    public static void prepareMicrophone() {
-        try {
-            AudioFormat format = new AudioFormat(48000, 16, 1, true, true);
-            DataLine.Info info = new DataLine.Info(TargetDataLine.class, format);
-            TargetDataLine microphone = (TargetDataLine) AudioSystem.getLine(info);
-            microphone.open(format);
-            microphone.start();
-            byte[] buffer = new byte[1000];
-            int bufferCount = 0;
-            int bytesRead;
-            int fullSum = 0;
-            while ((bytesRead = microphone.read(buffer, 0, buffer.length)) > 0) {
-               int level = calculateRMSLevel(buffer);
-              if (level > 60) {
-                  System.out.println(level);
-              }
-            }
-
-        } catch (LineUnavailableException e) {
-            throw new RuntimeException(e);
+    private static double calculateRMSLevel(byte[] audioData, int bytesRead) {
+        long sum = 0;
+        for (int i = 0; i < bytesRead - 1; i += 2) {
+            // Convert two bytes into one sample (16-bit audio)
+            int sample = (audioData[i] << 8) | (audioData[i + 1] & 0xFF);
+            sum += sample * sample;
         }
+
+        double rms = Math.sqrt(sum / (bytesRead / 2.0));
+        return rms == 0 ? 1 : rms; // Avoid log(0)
     }
-    public static String convertTo(Byte Input) {
-       String output = "";
-        for (int i = 0; i < Input ;i++) {
-            output = output + ".";
-        }
-        return output;
+public static void prepareMicrophone(File audio) throws LineUnavailableException{
+    AudioFormat format = new AudioFormat(44100, 16, 1, true, true);
+    DataLine.Info info = new DataLine.Info(TargetDataLine.class, format);
+    TargetDataLine mic = (TargetDataLine) AudioSystem.getLine(info);
+    mic.open(format);
+    mic.start();
+    byte[] buffer = new byte[2048];
+    int bytesRead;
+
+    while (true) {
+        // constantly running
+        bytesRead = mic.read(buffer, 0, buffer.length);
+        double rms = calculateRMSLevel(buffer, bytesRead);
+        double db = 20 * Math.log10(rms);
+        if (db > 80) playSound(audio);
     }
-    public static void main(String[] args) {
-        prepareMicrophone();
-       System.out.println("program Terminated");
+
+}
+    public static void main(String[] args) throws LineUnavailableException {
+        File sound = new File("C:\\Users\\isaac\\Downloads\\heavy-oh_nooooo");
+        prepareMicrophone(sound);
     }
 }
+
