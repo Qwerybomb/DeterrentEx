@@ -14,12 +14,12 @@ public class Deterrent {
         return rms == 0 ? 1 : rms; // Avoid log(0)
     }
 public static void prepareMicrophone(File audio) throws LineUnavailableException{
-    threadTest audioPlayer = new threadTest(audio);
-    audioPlayer.start();
+    audio_Player audioPlayer = new audio_Player(audio);
     AudioFormat format = new AudioFormat(44100, 16, 1, true, true);
     DataLine.Info info = new DataLine.Info(TargetDataLine.class, format);
     TargetDataLine mic = (TargetDataLine) AudioSystem.getLine(info);
     mic.open(format);
+    audioPlayer.start();
     mic.start();
     byte[] buffer = new byte[2048];
     int bytesRead;
@@ -38,10 +38,10 @@ public static void prepareMicrophone(File audio) throws LineUnavailableException
         prepareMicrophone(sound);
     }
 }
-class threadTest extends Thread {
+class audio_Player extends Thread {
     File audio;
     boolean peakReached = false;
-   public threadTest(File f) {
+   public audio_Player(File f) {
        this.audio = f;
    }
    public void booleanUpdate(boolean updater) {
