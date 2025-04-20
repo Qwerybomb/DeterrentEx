@@ -29,7 +29,8 @@ public static void prepareMicrophone(File audio) throws LineUnavailableException
         bytesRead = mic.read(buffer, 0, buffer.length);
         double rms = calculateRMSLevel(buffer, bytesRead);
         double db = 20 * Math.log10(rms);
-        if (db > 80) {audioPlayer.booleanUpdate(true);} else {audioPlayer.booleanUpdate(false);}
+        System.out.println(db);
+        if (db > 20) {audioPlayer.booleanUpdate(true);} else {audioPlayer.booleanUpdate(false);}
     }
 
 }
@@ -45,7 +46,7 @@ class audio_Player extends Thread {
        this.audio = f;
    }
    public void booleanUpdate(boolean updater) {
-       this.peakReached = updater;
+       peakReached = updater;
    }
     public static void playSound(File Audio) {
         try {
@@ -53,9 +54,7 @@ class audio_Player extends Thread {
             Clip clip = AudioSystem.getClip();
             clip.open(audioInputStream);
             clip.start();
-            while (clip.isRunning()) {
-                Thread.sleep(1);
-            }
+            Thread.sleep(clip.getMicrosecondLength() / 1000);
         } catch (Exception ex) {
             System.out.println("Failed to run audio");
             ex.printStackTrace();
@@ -64,6 +63,8 @@ class audio_Player extends Thread {
     @Override
     public void run() {
        while (true) {
+           // no idea why I need a System call for this to work ¯\_(ツ)_/¯
+           System.out.print("");
            if (peakReached) playSound(audio);
        }
     }
