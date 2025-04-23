@@ -54,7 +54,7 @@ class audio_Player extends Thread {
             Clip clip = AudioSystem.getClip();
             clip.open(audioInputStream);
             clip.start();
-            Thread.sleep(clip.getMicrosecondLength() * 1000);
+            Thread.sleep(clip.getMicrosecondLength() / 1000);
         } catch (Exception ex) {
             System.out.println("Failed to run audio");
             ex.printStackTrace();
