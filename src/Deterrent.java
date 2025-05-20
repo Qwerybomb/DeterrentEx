@@ -10,8 +10,8 @@ import javax.swing.*;
 public final class Deterrent {
 
     // initialize normal variables n such
-    static int DBlimit = 20;
-    static File audio;
+    static int DBlimit = 80;
+    static File audio = new File("C:\\Users\\isaac\\Music\\sharuk.wav");
 
     private static double calculateRMSLevel(byte[] audioData, int bytesRead) {
         long sum = 0;
@@ -48,23 +48,7 @@ public final class Deterrent {
             window.labelUpdate(String.valueOf(Math.round(db)));
         }
     }
-
-    public static void settingsReader() {
-        String data = null;
-        try {
-            File myObj = new File("src/settings.txt");
-            Scanner myReader = new Scanner(myObj);
-            audio = new File(myReader.nextLine());
-            DBlimit = Integer.parseInt(myReader.nextLine());
-            myReader.close();
-        } catch (FileNotFoundException e) {
-            System.out.println("An error occurred.");
-            e.printStackTrace();
-        }
-    }
-
     public static void main(String[] args) throws LineUnavailableException {
-        settingsReader();
         prepareMicrophone();
     }
 }
@@ -99,6 +83,7 @@ class audio_Player extends Thread {
     }
 }
 class GUI implements ActionListener {
+    ImageIcon imgicon = new ImageIcon("C:\\Users\\isaac\\Documents\\button.png");
     boolean isToggle = false;
     JPanel panel = new JPanel();
     JFrame window = new JFrame("Deterrent");
@@ -116,6 +101,7 @@ class GUI implements ActionListener {
         panel.add(DBreader);
 
         // window refinement
+        window.setIconImage(imgicon.getImage());
         window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         window.add(panel);
         window.setSize(300,300);

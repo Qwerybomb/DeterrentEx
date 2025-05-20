@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="Deterrent:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/Deterrent_jar</output-path>
+    <root id="archive" name="Deterrent.jar">
+      <element id="module-output" name="Deterrent" />
+    </root>
+  </artifact>
+</component>
